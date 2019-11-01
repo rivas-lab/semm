@@ -61,7 +61,7 @@ get_gen_cor <- function(fit1, ndim=2){
   return(rg[upper.tri(rg, diag=FALSE)])
 }
 
-#' Get a 95% confidence interval for the genetic correlation
+#' Get a ninety-five percent confidence interval for the genetic correlation
 #'
 #' @export
 #' @param fit1 fitted rstan model from model1 fit
@@ -83,6 +83,7 @@ get_gen_cor_ci <- function(fit1, ndim=2){
 
 #' Get the variances from the m2 fit
 #'
+#' @export
 #' @param fit2 the output of an m2
 #' @return a list of the variances estimated from the m2 fit
 get_vars <- function(fit2){

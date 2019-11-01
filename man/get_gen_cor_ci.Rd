@@ -2,7 +2,7 @@
 % Please edit documentation in R/extract_fit_params.R
 \name{get_gen_cor_ci}
 \alias{get_gen_cor_ci}
-\title{Get a 95% confidence interval for the genetic correlation}
+\title{Get a ninety-five percent confidence interval for the genetic correlation}
 \usage{
 get_gen_cor_ci(fit1, ndim = 2)
 }
@@ -16,5 +16,5 @@ lists of lower (l) and upper (u) CIs for the each of the pairwise genetic correl
        each sublist will be ndim-1 long (for ndim==2 it is a single value), ordered by the beta pairs
 }
 \description{
-Get a 95% confidence interval for the genetic correlation
+Get a ninety-five percent confidence interval for the genetic correlation
 }
