@@ -6,7 +6,7 @@
 Note: current code does not return the confidence interval;
 this will be added in the next version.}
 \usage{
-calc_heritability(fit1, dat, posterior.df = "", cutoff = 0.8)
+calc_heritability(fit1, dat, posterior.df = NULL, cutoff = 0.8)
 }
 \arguments{
 \item{fit1}{a model1 fit}

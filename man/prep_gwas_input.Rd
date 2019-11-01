@@ -4,8 +4,8 @@
 \alias{prep_gwas_input}
 \title{Reads in multiple GWAS files and reformats to a data object that can be used for model fitting.}
 \usage{
-prep_gwas_input(gwas.files, f.labels = "", se.cut = 0.2,
-  var.keep = "", BETA = "BETA", ID = "ID", CHR = "CHR",
+prep_gwas_input(gwas.files, f.labels = NULL, se.cut = 0.2,
+  var.keep = NULL, BETA = "BETA", ID = "ID", CHR = "CHR",
   SE = "SE", P = "P")
 }
 \arguments{

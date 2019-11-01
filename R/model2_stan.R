@@ -15,11 +15,13 @@
 #'           each row/column refers to the same variant and group as the beta values
 #' @return An object of class `stanfit` returned by `rstan::sampling` fitted to model2
 #'
-model2_stan <- function(dat="", B="", SE="", ...){
+model2_stan <- function(dat=NULL, B=NULL, SE=NULL, ...){
+
   # check the input
   .my_assert("please provide either a dataset -or- betas and SEs",
-             (dat=="" & B!="" & SE!="") | (dat!="" & B=="" & SE==""))
-  if (dat==""){
+             (is.null(dat) & !is.null(B) & !is.null(SE)) |
+               (!is.null(dat) & is.null(B) & is.null(SE)))
+  if (is.null(dat)){
     dat=list("B"=B, "SE"=SE)
   }
   .check_in_dat_format(dat)

@@ -4,7 +4,7 @@
 \alias{model1_stan}
 \title{Estimate genetic parameters using SEMM.}
 \usage{
-model1_stan(dat = "", B = "", SE = "", ...)
+model1_stan(dat = NULL, B = NULL, SE = NULL, ...)
 }
 \arguments{
 \item{dat}{input data object, produced from prep_gwas_input()}

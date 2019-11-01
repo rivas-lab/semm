@@ -19,13 +19,13 @@
 #' ------------------------
 #' @return a data object containing betas and standard errors formatted
 #'        for model fitting, also contains variant ids
-prep_gwas_input <- function(gwas.files, f.labels="", se.cut=0.2, var.keep="",
+prep_gwas_input <- function(gwas.files, f.labels=NULL, se.cut=0.2, var.keep=NULL,
                          BETA="BETA", ID="ID", CHR="CHR", SE="SE", P="P"){
 
   .check_read_in_params(gwas.files, f.labels, se.cut)
 
   # create category labels if they are not provided
-  f.labels <- ifelse(f.labels=="",paste(rep("cat", ndim), c(1:ndim), sep=""), f.labels)
+  f.labels <- ifelse(is.null(f.labels),paste(rep("cat", ndim), c(1:ndim), sep=""), f.labels)
 
   list.ds <- lapply(gwas.files, function(gwas.file) {
 
@@ -43,7 +43,7 @@ prep_gwas_input <- function(gwas.files, f.labels="", se.cut=0.2, var.keep="",
     dat.3 <- dat.2[dat.2$SE < se.cut,]
 
     # filter to a subset of variants
-    if (var.keep != ""){
+    if (!is.null(var.keep)){
       .check_var_to_keep(var.keep, dat3$ID)
       dat.3 <- dat.3[dat.3$ID %in% var.keep,]
     }

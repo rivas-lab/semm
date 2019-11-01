@@ -53,7 +53,7 @@
 
   # ---- check optional params ---- #
   # if category names are specified, there must be the same number as files
-  if (f.labels != ""){
+  if (!is.null(f.labels)){
     .my_assert("please provide the same number of labels as files", length(f.labels) == ndim)
   }
 
@@ -90,9 +90,10 @@
   req_cols <- c("B", "SE")
   .my_assert("Data does not have betas or standard errors. Use prep_gwas_input() to set up input correctly." ,
     all(req_cols %in% names(dat)))
-  helpful_cols <- c("ID", "p", "CHR")
-  .my_warn("data is missing id columns" ,
-             all(helpful_cols %in% names(dat)))
+  .my_warn("data is missing id, pval, or chr columns" ,
+             "id" %in% names(dat))
+  .my_warn("data is missing pval, or chr columns" ,
+           all(c("p", "chr") %in% names(dat)))
 
   # make sure the betas and standard errors are the same size
   .my_assert("Betas and se matrices are not the same size. Use prep_gwas_input() to set up input correctly.",

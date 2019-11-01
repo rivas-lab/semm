@@ -29,8 +29,8 @@ extract_fit_params <- function(fit, ndim=2){
 #' @param fit fitted rstan model from model1 or model2 fit
 #' @return vector containing the proportions for the fit
 get_proportions <- function(fit){
-  fit_summ_pi <- summary(fit, pars=c("pi"), probs=c(0.05, 0.50, 0.95))
-  p <- as.vector(fit_summ_pi$summary[,c("0.50")])
+  fit_summ_pi <- rstan::summary(fit, pars=c("pi"), probs=c(0.05, 0.50, 0.95))
+  p <-fit_summ_pi$summary[,c("50%")]
   return(p)
 }
 
@@ -42,8 +42,7 @@ get_proportions <- function(fit){
 #' @return variance covariance matrix of size ndim x ndim
 get_var_covar_matrix <- function(fit1, ndim=2){
   .my_assert("error. please provide a model1 fit", fit1@model_name=="model1")
-
-  fit_summ_S <- summary(fit1, pars=c("Sigma"), probs=c(0.05, 0.50, 0.95))
+  fit_summ_S <- rstan::summary(fit1, pars=c("Sigma"), probs=c(0.05, 0.50, 0.95))
   Sigma <- matrix(fit_summ_S$summary[,c("50%")], ndim, ndim)
   return(Sigma)
 }
@@ -57,7 +56,7 @@ get_var_covar_matrix <- function(fit1, ndim=2){
 get_gen_cor <- function(fit1, ndim=2){
   .my_assert("error. please provide a model1 fit", fit1@model_name=="model1")
 
-  fit_summ_R <- summary(fit1, pars=c("Omegacor"), probs=c(0.05, 0.50, 0.95))
+  fit_summ_R <- rstan::summary(fit1, pars=c("Omegacor"), probs=c(0.05, 0.50, 0.95))
   rg <- matrix(fit_summ_R$summary[,c("50%")], ndim, ndim)
   return(rg[upper.tri(rg, diag=FALSE)])
 }
@@ -72,7 +71,7 @@ get_gen_cor <- function(fit1, ndim=2){
 get_gen_cor_ci <- function(fit1, ndim=2){
   .my_assert("error. please provide a model1 fit", fit1@model_name=="model1")
 
-  fit_summ_R <- summary(fit1, pars=c("Omegacor"), probs=c(0.025, 0.975))
+  fit_summ_R <- rstan::summary(fit1, pars=c("Omegacor"), probs=c(0.025, 0.975))
   pairs <- combn(ndim, 2)
   list.labels <- apply(pairs, 2, function(x) sprintf("Omegacor[%s,%s]", x[1], x[2]))
   conf.l <- fit_summ_R$summary[list.labels,"2.5%"]
@@ -89,7 +88,7 @@ get_gen_cor_ci <- function(fit1, ndim=2){
 get_vars <- function(fit2){
   .my_assert("error. please provide a model2 fit", fit2@model_name=="model2")
 
-  fitS <- summary(fit2, pars=c("sigmasq"), probs=c(0.05, 0.50, 0.95))
+  fitS <- rstan::summary(fit2, pars=c("sigmasq"), probs=c(0.05, 0.50, 0.95))
   sigmasq <- as.vector(fitS$summary[,c("50%")])
   return(sigmasq)
 }

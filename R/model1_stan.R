@@ -16,18 +16,19 @@
 #' @param ... Arguments passed to `rstan::sampling` (e.g. iter, chains).
 #' @return An object of class `stanfit` returned by `rstan::sampling` fitted to model1
 #'
-model1_stan <- function(dat="", B="", SE="", ...){
+model1_stan <- function(dat=NULL, B=NULL, SE=NULL, ...){
 
   # check the input
   .my_assert("please provide either a dataset -or- betas and SEs",
-             (dat=="" & B!="" & SE!="") | (dat!="" & B=="" & SE==""))
-  if (dat==""){
+             (is.null(dat) & !is.null(B) & !is.null(SE)) |
+               (!is.null(dat) & is.null(B) & is.null(SE)))
+  if (is.null(dat)){
     dat=list("B"=B, "SE"=SE)
   }
   .check_in_dat_format(dat)
 
   # fit the model
-  standata <- list(B=dat$B, SE=Sdat$E, N=nrow(dat$B), M = ncol(dat$B), K = 2)
+  standata <- list(B=dat$B, SE=dat$E, N=nrow(dat$B), M = ncol(dat$B), K = 2)
   out <- rstan::sampling(stanmodels$model1, data = standata, ...)
   return(out)
 }

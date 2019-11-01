@@ -4,7 +4,7 @@
 \alias{model2_stan}
 \title{Identify sex-specific variants using SEMM.}
 \usage{
-model2_stan(dat = "", B = "", SE = "", ...)
+model2_stan(dat = NULL, B = NULL, SE = NULL, ...)
 }
 \arguments{
 \item{dat}{input data object, produced from prep_gwas_input()}

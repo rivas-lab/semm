@@ -9,15 +9,15 @@
 #'        have it to avoid recalculating
 #' @param cutoff the cutoff to assign to the non-null component, defaults to 0.8
 #' @return a list of the heritabilities
-calc_heritability <- function(fit1, dat, posterior.df="", cutoff=0.8){
+calc_heritability <- function(fit1, dat, posterior.df=NULL, cutoff=0.8){
   .my_assert("error. model is not of class 1", fit1@model_name=="model1")
   .check_in_dat_format(dat)
 
   # calculate posterior probability and assign to categories
-  if (posterior.df ==""){
+  if (is.null(posterior.df)){
     posterior.df <- calc_posteriors(fit1, dat)
   }
-  var.categories <- assign_cto_components(posterior.df, cutoff)$components
+  var.categories <- assign_to_components(posterior.df, cutoff)$component
   se.p2 <- dat$SE[var.categories==2,]
 
   # grab parameters
@@ -27,6 +27,7 @@ calc_heritability <- function(fit1, dat, posterior.df="", cutoff=0.8){
   # calculate heritability
   list.h <- sapply(1:nrow(Sigma), function(idx)
     .calc_herit_one(se.p2, Sigma, p, idx))
+  names(list.h) <- paste(rep("h", length(dat$cols)), dat$cols, sep=".")
   return(list.h)
 }
 
