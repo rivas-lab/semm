@@ -11,15 +11,15 @@ calc_posteriors <- function(fit, dat){
   .check_in_dat_format(dat)
 
   # grab the data and fit output
-  B_dat <- dat$B
-  SE_dat <- dat$SE
-  N <- nrow(B_dat)
+  B.dat <- dat$B
+  SE.dat <- dat$SE
+  N <- nrow(B.dat)
   p <- get_proportions(fit)
 
   if (fit@model_name=="model1"){
     Sigma <- get_var_covar_matrix(fit)
     posteriors <- sapply(1:N, function(i)
-      .calc_posterior_variant_m1(B_dat[i,], SE_dat[i,], p, Sigma))
+      .calc_posterior_variant_m1(B.dat[i,], SE.dat[i,], p, Sigma))
     posterior.df <- data.frame(posteriors)
     colnames(posterior.df) <- c("p2")
   }
@@ -27,7 +27,7 @@ calc_posteriors <- function(fit, dat){
   if (fit@model_name=="model2"){
     sigmasq <- get_vars(fit)
     posteriors <- lapply(1:N, function(i)
-      .calc_posterior_variant_m2(B.dat[i,], SE.dat[i,], p, sigmasq, Sigma))
+      .calc_posterior_variant_m2(B.dat[i,], SE.dat[i,], p, sigmasq))
     posterior.df <- data.frame(do.call(rbind, posteriors))
     colnames(posterior.df) <- c("p1", "p2", "p3", "p4")
   }
@@ -73,7 +73,7 @@ calc_posteriors <- function(fit, dat){
   prob_2 = exp(log(p_2) - log(p_tot))
   prob_3 = exp(log(p_3) - log(p_tot))
   prob_4 = exp(log(p_4) - log(p_tot))
-  return(list(prob_1, prob_2, prob_3, prob_4))
+  return(data.frame(t(c(prob_1, prob_2, prob_3, prob_4))))
 }
 
 

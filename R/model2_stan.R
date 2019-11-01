@@ -27,7 +27,7 @@ model2_stan <- function(dat=NULL, B=NULL, SE=NULL, ...){
   .check_in_dat_format(dat)
 
   # fit the model
-  standata <- list(B=dat$B, SE=Sdat$E, N=nrow(dat$B), M = ncol(dat$B), K = 4)
+  standata <- list(B=dat$B, SE=dat$SE, N=nrow(dat$B), M = ncol(dat$B), K = 4)
   out <- rstan::sampling(stanmodels$model2, data = standata, ...)
   return(out)
 }

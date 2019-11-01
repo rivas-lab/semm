@@ -10,14 +10,15 @@ assign_to_components <- function(posterior.df, cutoff=0.8){
     components <- sapply(posterior.df$p2, function(post)
       ifelse(post > cutoff, 2, 1))
   } else{
-    components <- sapply(posterior.df %>% dplyr::select(-ID), function(post){
-      max_group <- which.max(post)
+    components <- apply(posterior.df, 1, function(post){
+      max_group <- c(1:4)[which.max(post[1:4])]
       if (post[max_group] <= 0.8){
         max_group <- 1
       }
+      return(max_group)
     })
   }
-  return(cbind(posterior.df, "component"=components))
+  return(cbind(posterior.df, "component"=unlist(components)))
 }
 
 
