@@ -1,14 +1,19 @@
 Package: semm
-Title: What the Package Does (One Line, Title Case)
+Title: Bayesian Mixture Models to Identify Sex-Specific Effects in GWAS Summary Statistics 
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Emily",
+           family = "Flynn",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "erflynn@stanford.edu.com",
+           comment = c(ORCID = "0000-0001-9703-3594"))
+Description: Sex Effects Mixture Model (SEMM) is a Bayesian Mixture Model to 
+    estimate sex-specific heritability and genetic correlation from GWAS 
+    summary statistic data for quantitative traits. An extension of this model
+    is also used to identify variants with sex-specific effects. This package
+    contains the stan models and helper functions for preparing input and 
+    extracting output.
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Biarch: true
