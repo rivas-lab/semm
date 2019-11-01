@@ -1,0 +1,120 @@
+---
+title: "SEMM Example"
+author: "E Flynn"
+date: "10/31/2019"
+output: html_document
+---
+
+```{r, echo=FALSE, message=FALSE}
+require('semm')
+```
+
+
+## Prepare the input data
+The method takes as input sex-divided GWAS summary stats. We use the function `prep_gwas_input()` to reformat the summary statistic files into an input object for the models.
+
+Prior to loading the data, please make sure that the summary statistic data is flip-fixed so allele effect sizes match. Additionally, we recommend LD filtering the variants and running other QC metrics on variant data; this can be done by pre-filtering the input data or providing a list of variants to keep using the `var.keep` option.
+
+We use a standard error cutoff of 0.2 to remove variants with high standard errors.
+```{r}
+dat <- prep_gwas_input(f.file, m.file, se.cut = 0.2, var.keep = ld.filtered.lst)
+```
+
+## Two-component model to estimate genetic correlation and heritability
+We call this `model 1`. This is a two-component mixture model consisting of a point mass centered at zero and a multivariate normal distribution. The $$\beta$$ and $$SE$$ values are from the summary statistics. 
+
+$$ M_0 = \left[\begin{array}{c} \hat{\beta}_{f} \\ \hat{\beta}_{m} \end{array}\right] \sim N \left( 0, \begin{bmatrix} \hat{SE}^2_{f}  & 0 \\ 0 & \hat{SE}^2_{m} \end{bmatrix} \right)$$
+$$M_1 = \left[\begin{array}{c} \hat{\beta}_{f} \\ \hat{\beta}_{m} \end{array}\right] \sim N \left( 0, \begin{bmatrix} \hat{SE}^2_{f}  & 0 \\ 0 & \hat{SE}^2_{m} \end{bmatrix}  + \begin{bmatrix} \sigma^2_f & \rho {\sigma}_f  \sigma_m  \\ \rho {\sigma}_f  \sigma_m  & \sigma^2_m \end{bmatrix}\right)$$
+
+We use this model to estimate $$\pi$$, the proportion in each component, and $$\Sigma$$, the variance-covariance matrix of the non-null component. In the process, we also estimate the *genetic correlation*. We can use $$\pi$$ and $$\Sigma$$ to look at the posterior probability of a variant being assigned to the non-null component and estimate *heritability*.
+
+### Train the two-component model
+```{r}
+fit1 <- model1_stan(dat)
+
+```
+
+### Examine the model fit
+It is important to check the model for convergence. As a quick check, make sure the `Rhat` values are close to 1, and check the traceplot to see that it converges. Please refer to the [stan reference manual](https://mc-stan.org/docs/2_18/reference-manual/) for more information about this. The output is an object of class stanfit; there are many ways to examine this output. 
+```{r}
+# we care about these three parameters: "pi", "Sigma", "Omegacor"
+#  Omegacor is the genetic correlation
+
+# view the summary
+print(fit1, pars=c("pi", "Sigma", "Omegacor"), digits=5)
+
+# print the traceplots
+traceplot(fit1, pars=c("pi", "Sigma", "Omegacor"))
+```
+
+### Extract the parameter fit, heritability, and genetic correlation
+
+Now that we've examined the fit and we're happy with it, let's extract the fitted parameters.
+```{r}
+fit_params <- extract_fit_params(fit1)
+fit_params$prop # proportion in each component: null, non-null (pi)
+fit_params$var_cov # the variance-covariance matrix (Sigma)
+
+fit_params$gen_cor # or use `get_gen_cor(fit1)` (off-diagonal for Omegacor)
+get_gen_cor_ci(fit1) # gives the 95% hpd interval for the genetic correlation
+```
+
+To get the heritability, we rely on assigning variants to components. First, we need to calculate the posterior probability a variant belongs to the non-null component.
+```{r}
+posterior.df <- calc_posteriors(fit1, dat) # note: this calculation is slow
+head(posterior.df) # p2 is the probability it belongs to the non-null component
+summary(posterior.df$p2) 
+```
+
+Then, we can select a cutoff for which we assign the variant to the non-null component (we generally use 0.8), and use that to calculate the heritability for females and males separately.
+```{r}
+herit <- calc_heritability(fit1, dat, posterior.df, cutoff=0.8)
+herit # females, males
+```
+
+## Two component model identify sex-specific variants
+`model2` is a four-component model that we use to identify variants with "sex-specific" effects. “sex-specific” effects indicate that the effect of these variants in males is different from that in females -- e.g. this variant is associated with higher values of a trait in females but not in males, while a “shared” effect would mean that the same genetic variant or set of variants have the same effect in males and females. 
+
+The four components are as follows, where $$\beta \neq 0$$:
+$$k = 1, \beta_m = \beta_f = 0$$           No effect
+$$k = 2, \beta_m =\beta, \beta_m=0$$     Female-specific effect
+$$k=3, \beta_f = 0, \beta_m = \beta$$       Male-specific effect
+$$k=4, \beta_m = \beta, \beta_f = \beta $$      Effects in both sexes
+
+
+### Train the four-component model
+We use the same data object to train model2.
+Note that model2 takes longer to fit than model1.
+```{r}
+fit2 <- model2_stan(dat)
+```
+
+It is important to examine the model fit for convergence.
+This model works very well in cases that there are highly polygenic sex-specific effects, but has poor performance if there are few sex-specific effects.
+```{r}
+# we care about these parameters: "pi", "sigmasq"
+#   sigmasq is the variances for each of the components: 
+#     female-specific, male-specific, and then combined (in both females and males) respectively
+
+# view the summary
+print(fit1, pars=c("pi", "sigmasq"), digits=5)
+
+# print the traceplots
+traceplot(fit1, pars=c("pi", "sigmasq"))
+```
+
+### Extract the parameter fit and the sex-specific variants
+```{r}
+fit_params2 <- extract_fit_params(fit2)
+fit_params2$prop # the proportion assigned to each
+fit_params2$vars # the variances
+```
+
+
+```{r}
+posterior.df <- calc_posteriors(fit2, dat)
+
+component.df <- assign_to_components(posterior.df, cutoff = 0.8)
+table(component.df$component)
+head(component.df)
+```
