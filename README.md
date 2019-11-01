@@ -7,6 +7,6 @@ Bayesian Mixture Models for (1) estimating sex-specific heritability and genetic
 
 See [semm-vignette](vignettes/semm-vignette.Rmd) for an example and instructions.
 
-To install, this package used `devtools::install_github("rivas-lab/semm")`.
+To install this package, use `devtools::install_github("rivas-lab/semm")`.
 
 This package relies on `rstan`, please visit the [`rstan`](https://mc-stan.org/rstan/) webpage for more information about the package and instructions for how to install. 
