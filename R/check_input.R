@@ -38,17 +38,16 @@
              length(setdiff(c(ID, BETA, SE, CHR, P), colnames(dat)))==0)
 }
 
-.check_read_in_params <- function(gwas.files, f.labels, se.cut){
+.check_read_in_params <- function(gwas.files, ndim, f.labels, se.cut){
 
   # ---- check required params ---- #
   # make sure there are a reasonable number of files (2+ and warn if a lot)
-  ndim <- length(gwas.files)
   .my_assert("please provide multiple input files", ndim > 1)
-  .my_warn("this has not been tested for more than 4 categories", ndim > 4)
+  .my_warn("this has not been tested for more than 4 categories", ndim < 4)
 
   # make sure the files exist
   f_checks <- lapply(gwas.files, function(gwas.file){
-    .my_assert("gwas file not found", file_exists(gwas.file))
+    .my_assert("gwas file not found", file.exists(gwas.file))
   })
 
   # ---- check optional params ---- #
@@ -66,14 +65,14 @@
 .check_var_to_keep <- function(var.keep, data.ids){
   length_overlap <- length(intersect(var.keep, data.ids))
   .my_assert("the variants to keep must overlap the variant ids in the GWAS file",
-             length_overlap == 0)
+             length_overlap > 0)
 }
 
 .check_overlap_rows <- function(rows.to.keep){
   .my_assert("there are no overlapping variants",
-             rows.to.keep == 0)
+             length(rows.to.keep) > 0)
   .my_warn("you have less than 100 variants after filtering",
-           length(rows.to.keep) < 100)
+           length(rows.to.keep) >= 100)
 }
 
 # ----------------------------------------- #

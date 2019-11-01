@@ -22,15 +22,17 @@
 prep_gwas_input <- function(gwas.files, f.labels=NULL, se.cut=0.2, var.keep=NULL,
                          BETA="BETA", ID="ID", CHR="CHR", SE="SE", P="P"){
 
-  .check_read_in_params(gwas.files, f.labels, se.cut)
+  ndim <- length(gwas.files)
+  .check_read_in_params(gwas.files, ndim, f.labels, se.cut)
 
   # create category labels if they are not provided
+
   f.labels <- ifelse(is.null(f.labels),paste(rep("cat", ndim), c(1:ndim), sep=""), f.labels)
 
   list.ds <- lapply(gwas.files, function(gwas.file) {
 
     # read in an input file and rename the columns
-    dat.0 <- read.table(gwas.file, header=TRUE, sep=" ")
+    dat.0 <- read.delim(gwas.file, header=TRUE)
     .check_gwas_f_format(dat.0, ID, BETA, SE, CHR, P)
 
     dat.1 <- dat.0 %>% rename("ID"=ID, "BETA"=BETA, "SE"=SE, "CHR"=CHR, "P"=P)
