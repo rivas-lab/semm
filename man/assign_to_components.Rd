@@ -9,7 +9,7 @@ assign_to_components(posterior.df, cutoff = 0.8)
 \arguments{
 \item{posterior.df}{posterior.df from calc_posteriors()}
 
-\item{cutoff}{the minimum cutoff to assign to a non-null component}
+\item{cutoff}{the minimum cutoff to assign to a non-null component, default 0.8}
 }
 \value{
 the posterior df with an additional 'component' column

@@ -5,9 +5,10 @@
 #'
 #' @export
 #' @param fit fitted rstan model from model1 or model2 fit
+#' @param dat a list with B and SE elements, variant IDs; from prep_gwas_input()
 #' @param ndim optional parameter to specify number of categories (e.g. male, female), defaults to 2
 #' @return named list of fit parameters
-extract_fit_params <- function(fit, ndim=2){
+extract_fit_params <- function(fit, dat, ndim=2){
   .my_assert("error. model is not of class 1 or 2", fit@model_name %in% c("model1", "model2"))
 
   p <- get_proportions(fit)
@@ -18,7 +19,7 @@ extract_fit_params <- function(fit, ndim=2){
     return(list("prop"=p, "var_cov"=Sigma, "gen_cor"=rg))
   }
   if (fit@model_name == "model2"){
-    sigmasq <- get_vars(fit)
+    sigmasq <- get_vars(fit, dat)
     return(list("prop"=p, "vars"=sigmasq))
   }
 }
@@ -31,6 +32,7 @@ extract_fit_params <- function(fit, ndim=2){
 get_proportions <- function(fit){
   fit_summ_pi <- rstan::summary(fit, pars=c("pi"), probs=c(0.05, 0.50, 0.95))
   p <-fit_summ_pi$summary[,c("50%")]
+  names(p) <- sapply(0:(length(p)-1), function(i) sprintf("pi[%i]", i))
   return(p)
 }
 
@@ -85,12 +87,15 @@ get_gen_cor_ci <- function(fit1, ndim=2){
 #'
 #' @export
 #' @param fit2 the output of an m2
+#' @param dat a list with B and SE elements, variant IDs; from prep_gwas_input()
 #' @return a list of the variances estimated from the m2 fit
-get_vars <- function(fit2){
+get_vars <- function(fit2, dat){
   .my_assert("error. please provide a model2 fit", fit2@model_name=="model2")
 
   fitS <- rstan::summary(fit2, pars=c("sigmasq"), probs=c(0.05, 0.50, 0.95))
   sigmasq <- as.vector(fitS$summary[,c("50%")])
+  names(sigmasq) <- paste(c("s1", "s2", "s3", "s3"), c(dat$cols[[1]], dat$cols[[2]],
+                                                       dat$cols[[1]], dat$cols[[2]]), sep=".")
   return(sigmasq)
 }
 

@@ -4,10 +4,12 @@
 \alias{extract_fit_params}
 \title{Returns the fitted parameters for a model 1 or model 2 object.}
 \usage{
-extract_fit_params(fit, ndim = 2)
+extract_fit_params(fit, dat, ndim = 2)
 }
 \arguments{
 \item{fit}{fitted rstan model from model1 or model2 fit}
+
+\item{dat}{a list with B and SE elements, variant IDs; from prep_gwas_input()}
 
 \item{ndim}{optional parameter to specify number of categories (e.g. male, female), defaults to 2}
 }

@@ -18,7 +18,7 @@ calc_heritability <- function(fit1, dat, posterior.df=NULL, cutoff=0.8){
     posterior.df <- calc_posteriors(fit1, dat)
   }
   var.categories <- assign_to_components(posterior.df, cutoff)$component
-  se.p2 <- dat$SE[var.categories==2,]
+  se.p2 <- dat$SE[var.categories==1,]
 
   # grab parameters
   Sigma <- get_var_covar_matrix(fit1)

@@ -27,12 +27,18 @@ Imports:
     MASS (>= 7.3-51.4),
     Matrix (>= 1.2-17),
     mnormt (>= 1.5-5),
-    dplyr (>= 0.8.3)
+    dplyr (>= 0.8.3),
+    ggplot2,
+    readr
 LinkingTo: 
     BH (>= 1.66.0),
     Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
     rstan (>= 2.18.1),
     StanHeaders (>= 2.18.0)
+Suggests:
+    knitr
+VignetteBuilder:
+    knitr
 SystemRequirements: GNU make
 RoxygenNote: 6.1.1

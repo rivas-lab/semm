@@ -4,10 +4,12 @@
 \alias{get_vars}
 \title{Get the variances from the m2 fit}
 \usage{
-get_vars(fit2)
+get_vars(fit2, dat)
 }
 \arguments{
 \item{fit2}{the output of an m2}
+
+\item{dat}{a list with B and SE elements, variant IDs; from prep_gwas_input()}
 }
 \value{
 a list of the variances estimated from the m2 fit

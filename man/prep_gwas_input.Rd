@@ -4,18 +4,18 @@
 \alias{prep_gwas_input}
 \title{Reads in multiple GWAS files and reformats to a data object that can be used for model fitting.}
 \usage{
-prep_gwas_input(gwas.files, f.labels = NULL, se.cut = 0.2,
-  var.keep = NULL, BETA = "BETA", ID = "ID", CHR = "CHR",
-  SE = "SE", P = "P")
+prep_gwas_input(gwas.files, cat.labels = NULL, se.cut = 0.2,
+  var.keep = NULL, B = "BETA", ID = "ID", CHR = "CHR", SE = "SE",
+  P = "P")
 }
 \arguments{
-\item{gwas.files}{a list of locations of files containing GWAS summary statistics,
+\item{gwas.files}{a list of files containing GWAS summary statistics,
       this program uses the "ID", "CHR", BETA","SE", and "P" columns for the analysis.
       Please rename your columns to match this or specify this as parameters.
 
 ---- optional params ----}
 
-\item{f.labels}{optionally provide a vector of labels for the files (e.g. c("female", "male")),
+\item{cat.labels}{optionally provide a vector of labels for the files (e.g. c("female", "male")),
 defaults to cat1, ..., catn}
 
 \item{se.cut}{optionally specify the max standard error allowed, defaults to 0.2}
@@ -23,7 +23,7 @@ defaults to cat1, ..., catn}
 \item{var.keep}{optional list of variants to keep, often used for LD or other filtering,
 defaults to keeping all}
 
-\item{BETA}{optional column name with betas, default "BETA"}
+\item{B}{optional column name with betas, default "B"}
 
 \item{ID}{optional column name with variant ids, default "ID"}
 

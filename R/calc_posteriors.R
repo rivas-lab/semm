@@ -21,15 +21,15 @@ calc_posteriors <- function(fit, dat){
     posteriors <- sapply(1:N, function(i)
       .calc_posterior_variant_m1(B.dat[i,], SE.dat[i,], p, Sigma))
     posterior.df <- data.frame(posteriors)
-    colnames(posterior.df) <- c("p2")
+    colnames(posterior.df) <- c("p1")
   }
 
   if (fit@model_name=="model2"){
-    sigmasq <- get_vars(fit)
+    sigmasq <- get_vars(fit, dat)
     posteriors <- lapply(1:N, function(i)
       .calc_posterior_variant_m2(B.dat[i,], SE.dat[i,], p, sigmasq))
     posterior.df <- data.frame(do.call(rbind, posteriors))
-    colnames(posterior.df) <- c("p1", "p2", "p3", "p4")
+    colnames(posterior.df) <- c("p0", "p1", "p2", "p3")
   }
   posterior.df$ID <- dat$id
   return(posterior.df)
@@ -46,11 +46,11 @@ calc_posteriors <- function(fit, dat){
 .calc_posterior_variant_m1 <- function(B, SE, p, Sigma){
   zeros <- rep(0, length(SE))
   SE_mat <- diag(SE)
-  p_1 = p[1]*mnormt::dmnorm(B, zeros, SE_mat)
-  p_2 = p[2]*mnormt::dmnorm(B, zeros, SE_mat + Sigma)
-  prob_1 = log(p_1) - log(p_1 + p_2)
-  prob_2 = log(p_2) - log(p_1 + p_2)
-  return(exp(prob_2))
+  p_0 = p[1]*mnormt::dmnorm(B, zeros, SE_mat)
+  p_1 = p[2]*mnormt::dmnorm(B, zeros, SE_mat + Sigma)
+  prob_0 = log(p_0) - log(p_0 + p_1)
+  prob_1 = log(p_1) - log(p_0 + p_1)
+  return(exp(prob_1))
 }
 
 #' Calculate the posterior probability for an m2 variant
@@ -64,16 +64,16 @@ calc_posteriors <- function(fit, dat){
   zeros <- c(0,0)
   SE_mat <- matrix(c(SE[1], 0, 0, SE[2]), 2, 2)
   Sigma <- matrix(c(sigmasq[3], 0, 0, sigmasq[4]),2,2)
-  p_1 = p[1]*mnormt::dmnorm(B, zeros, SE_mat)
-  p_2 = p[2]*mnormt::dmnorm(B, zeros, SE_mat + matrix(c(sigmasq[1], 0, 0, 0),2, 2))
-  p_3 = p[3]*mnormt::dmnorm(B, zeros, SE_mat + matrix(c(0, 0, 0, sigmasq[2]),2,2))
-  p_4 = p[4]*mnormt::dmnorm(B, zeros, SE_mat + Sigma)
-  p_tot = p_1 + p_2+ p_3 + p_4
+  p_0 = p[1]*mnormt::dmnorm(B, zeros, SE_mat)
+  p_1 = p[2]*mnormt::dmnorm(B, zeros, SE_mat + matrix(c(sigmasq[1], 0, 0, 0),2, 2))
+  p_2 = p[3]*mnormt::dmnorm(B, zeros, SE_mat + matrix(c(0, 0, 0, sigmasq[2]),2,2))
+  p_3 = p[4]*mnormt::dmnorm(B, zeros, SE_mat + Sigma)
+  p_tot = p_0 + p_1+ p_2 + p_3
+  prob_0 = exp(log(p_0) - log(p_tot))
   prob_1 = exp(log(p_1) - log(p_tot))
   prob_2 = exp(log(p_2) - log(p_tot))
   prob_3 = exp(log(p_3) - log(p_tot))
-  prob_4 = exp(log(p_4) - log(p_tot))
-  return(data.frame(t(c(prob_1, prob_2, prob_3, prob_4))))
+  return(data.frame(t(c(prob_0, prob_1, prob_2, prob_3))))
 }
 
 

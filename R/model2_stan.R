@@ -25,6 +25,7 @@ model2_stan <- function(dat=NULL, B=NULL, SE=NULL, ...){
     dat=list("B"=B, "SE"=SE)
   }
   .check_in_dat_format(dat)
+  .my_assert("model2 only works for data with two categories", ncol(dat$B)==2)
 
   # fit the model
   standata <- list(B=dat$B, SE=dat$SE, N=nrow(dat$B), M = ncol(dat$B), K = 4)
