@@ -5,7 +5,7 @@
 
 Bayesian Mixture Models for (1) estimating sex-specific heritability and genetic correlation and (2) identifying sex-specific variants in quantitative traits using GWAS summary statistics. 
 
-See [semm-vignette](vignettes/semm-vignette.Rmd) for an example and instructions.
+See [semm-vignette](https://htmlpreview.github.io/?https://github.com/rivas-lab/semm/blob/dev/doc/semm-vignette.html) for an example and instructions.
 
 To install this package, use `devtools::install_github("rivas-lab/semm")`.
 
