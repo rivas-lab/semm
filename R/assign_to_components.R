@@ -12,7 +12,7 @@ assign_to_components <- function(posterior.df, cutoff=0.8){
   } else{
     components <- apply(posterior.df, 1, function(post){
       max_group <- c(0:3)[which.max(post[1:4])]
-      if (post[max_group+1] <= 0.8){
+      if (post[max_group+1] <= cutoff){
         max_group <- 0
       }
       return(max_group)
