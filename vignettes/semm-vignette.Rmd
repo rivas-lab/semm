@@ -136,14 +136,14 @@ herit <- calc_heritability(fit1, dat, posterior.df, cutoff=0.8)
 herit 
 ```
 
-## Two component model identify sex-specific variants
+## Four component model identify sex-specific variants
 `model2` is a four-component model that we use to identify variants with "sex-specific" effects. “sex-specific” effects indicate that the effect of these variants in males is different from that in females -- e.g. this variant is associated with higher values of a trait in females but not in males, while a “shared” effect would mean that the same genetic variant or set of variants have the same effect in males and females. 
 
-The four components are as follows, where $\beta \neq 0$:
-$k = 0, \beta_m = \beta_f = 0$           No effect
-$k = 1, \beta_m =\beta, \beta_m=0$     Female-specific effect
-$k=2, \beta_f = 0, \beta_m = \beta$      Male-specific effect
-$k=3, \beta_m = \beta, \beta_f = \beta $      Effects in both sexes
+The four components are as follows, where $\beta \neq 0$: \\
+$k = 0, \beta_m = \beta_f = 0$           No effect \\
+$k = 1, \beta_m =\beta, \beta_m=0$     Female-specific effect \\
+$k=2, \beta_f = 0, \beta_m = \beta$      Male-specific effect \\
+$k=3, \beta_m = \beta, \beta_f = \beta $      Effects in both sexes \\
 
 
 ### Train the four-component model
