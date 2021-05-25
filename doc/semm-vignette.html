@@ -470,9 +470,9 @@ Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 318.
 </div>
 </div>
 <div id="two-component-model-identify-sex-specific-variants" class="section level2">
-<h2>Two component model identify sex-specific variants</h2>
+<h2>Four component model identify sex-specific variants</h2>
 <p><code>model2</code> is a four-component model that we use to identify variants with “sex-specific” effects. “sex-specific” effects indicate that the effect of these variants in males is different from that in females – e.g. this variant is associated with higher values of a trait in females but not in males, while a “shared” effect would mean that the same genetic variant or set of variants have the same effect in males and females.</p>
-<p>The four components are as follows, where <span class="math inline">\(\beta \neq 0\)</span>: <span class="math inline">\(k = 0, \beta_m = \beta_f = 0\)</span> No effect <span class="math inline">\(k = 1, \beta_m =\beta, \beta_m=0\)</span> Female-specific effect <span class="math inline">\(k=2, \beta_f = 0, \beta_m = \beta\)</span> Male-specific effect $k=3, _m = , _f = $ Effects in both sexes</p>
+<p>The four components are as follows, where <span class="math inline">\(\beta \neq 0\)</span>: </span> No effect <span class="math inline">\(k = 1, \beta_m =\beta, \beta_m=0\)</span> Female-specific effect <span class="math inline">\(k=2, \beta_f = \beta, \beta_m = 0\)</span> Male-specific effect  <span class="math inline">\(k=3, \beta_f = 0, \beta_m = \beta\)</span> Effects in both sexes <span class="math inline">\(k=4, \beta_f = \beta_m = \beta\)</p>
 <div id="train-the-four-component-model" class="section level3">
 <h3>Train the four-component model</h3>
 <p>We use the same data object to train model2. Model2 only works for two category data (e.g. males and females), it has yet to be extended to more than two categories. Note that model2 takes longer to fit than model1. This took about 12 minutes on my computer; running with 300,000 variants takes</p>
